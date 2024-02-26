@@ -81,17 +81,4 @@ func TestConstructURLWithParams(t *testing.T) {
 			t.Errorf("got %q, wanted %q", got, want)
 		}
 	})
-
-	// t.Run("returns an error if baseURL is not a valid URL", func(t *testing.T) {
-	// 	baseURL := ""
-	// 	params := map[string]string{
-	// 		"param1": "value1",
-	// 		"param2": "value2",
-	// 	}
-
-	// 	_, err := companynames.ConstructURLWithParams(baseURL, params)
-	// 	if err == nil {
-	// 		t.Errorf("got %v, wanted error", err)
-	// 	}
-	// })
 }

@@ -15,8 +15,8 @@ func TestReadTextFileErrorsWhenFileNotFound(t *testing.T) {
 		"test3.txt": {Data: []byte("hello world 3")},
 	}
 	fileName := "test4.txt"
-	_, err := companynames.CompanyNamesFromTextFile(fs, fileName)
 
+	_, err := companynames.CompanyNamesFromTextFile(fs, fileName)
 	if err == nil {
 		t.Errorf("got %v, wanted error", err)
 	}
@@ -29,8 +29,8 @@ func TestReadTextFile(t *testing.T) {
 		"test3.txt": {Data: []byte("hello world 3")},
 	}
 	fileName := "test.txt"
-	companies, err := companynames.CompanyNamesFromTextFile(fs, fileName)
 
+	companies, err := companynames.CompanyNamesFromTextFile(fs, fileName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,11 +56,11 @@ func TestReadTestFileContent(t *testing.T) {
 
 	assertPost(t, companies[0], companynames.Company{Name: "hello"})
 	assertPost(t, companies[1], companynames.Company{Name: "world"})
-
 }
 
 func assertPost(t *testing.T, got companynames.Company, want companynames.Company) {
 	t.Helper()
+	
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %+v, wanted %+v", got, want)
 	}

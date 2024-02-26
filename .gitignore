@@ -1,0 +1,4 @@
+# Builds
+build/bin/*
+build/lint/*
+build/mockgen/*

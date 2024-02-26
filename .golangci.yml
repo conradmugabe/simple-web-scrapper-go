@@ -1,0 +1,108 @@
+linters:
+  enable-all: true
+  disable:
+    # could be omitted
+    - containedctx # Containedctx is a linter that detects struct contained context.Context field. --Lacks flexibility.
+    - contextcheck # Check the function whether use a non-inherited context. --Lacks flexibility.
+    - exhaustruct # Checks if all structure fields are initialized. --Excessive.
+    - gci # Gci controls golang package import order and makes it always deterministic. --Lacks flexibility.
+    - gochecknoglobals # Check that no global variables exist. --Excessive.
+    - gomnd # An analyzer to detect magic numbers. --Excessive.
+    - nonamedreturns # Reports all named returns. --No need.
+    - thelper # Detects golang test helpers without t.Helper() --Excessive.
+    - godox # Detects "TODO/BUG/FIXME" --Excessive.
+    # deprecated:
+    - maligned
+    - golint
+    - exhaustivestruct
+    - scopelint
+    - interfacer
+    - ifshort
+    - nosnakecase
+    - structcheck
+    - deadcode
+    - varcheck
+
+linters-settings:
+  cyclop:
+    max-complexity: 15
+    skip-tests: true
+  errorlint:
+    errorf: true
+    asserts: false
+    comparison: true
+  exhaustive:
+    check-generated: false
+    default-signifies-exhaustive: true
+    package-scope-only: false
+  gocyclo:
+    min-complexity: 15
+  gofumpt:
+    lang-version: "1.17"
+    module-path: voyager/point-management-service
+    extra-rules: true
+  govet:
+    check-shadowing: true
+  ireturn:
+    allow:
+      - anon
+      - error
+      - empty
+      - stdlib
+      - (or|er|Client)$
+  nlreturn:
+    block-size: 3
+  misspell:
+    locale: US
+  tagliatelle:
+    case:
+      use-field-name: true
+      rules:
+        validation: snake
+  varnamelen:
+    min-name-length: 2
+    max-distance: 10
+    ignore-type-assert-ok: true
+    ignore-map-index-ok: true
+    ignore-chan-recv-ok: true
+    ignore-names:
+      - err
+      - db
+      - tt
+    ignore-decls:
+      - c echo.Context
+      - t testing.T
+      - f *foo.Bar
+      - e error
+      - g *errgroup.Group
+      - i int
+      - const C
+      - T any
+      - m map[string]int
+      - wg *sync.WaitGroup
+      - w http.ResponseWriter
+      - rw http.ResponseWriter
+      - r *http.Request
+      - f *fields
+      - f fields
+  wrapcheck:
+    ignorePackageGlobs:
+      - google.golang.org/grpc/internal/*
+    ignoreInterfaceRegexps:
+      - grpc.Service
+  wsl:
+    allow-assign-and-anything: true
+    allow-assign-and-call: true
+    allow-cuddle-declarations: true
+    allow-multiline-assign: true
+    allow-separated-leading-comment: false
+    allow-trailing-comment: false
+    force-case-trailing-whitespace: 0
+    force-err-cuddling: true
+    force-short-decl-cuddling: false
+    strict-append: true
+issues:
+  exclude-rules:
+    - path: '(.+)_test\.go'
+      linters:
+        - funlen

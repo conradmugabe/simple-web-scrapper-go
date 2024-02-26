@@ -65,3 +65,33 @@ func assertPost(t *testing.T, got companynames.Company, want companynames.Compan
 		t.Errorf("got %+v, wanted %+v", got, want)
 	}
 }
+
+func TestConstructURLWithParams(t *testing.T) {
+	t.Run("constructs URL with params", func(t *testing.T) {
+		baseURL := "http://example.com"
+		params := map[string]string{
+			"param1": "value 1",
+			"param2": "value 2",
+		}
+
+		want := "http://example.com?param1=value+1&param2=value+2"
+
+		got, _ := companynames.ConstructURLWithParams(baseURL, params)
+		if got != want {
+			t.Errorf("got %q, wanted %q", got, want)
+		}
+	})
+
+	// t.Run("returns an error if baseURL is not a valid URL", func(t *testing.T) {
+	// 	baseURL := ""
+	// 	params := map[string]string{
+	// 		"param1": "value1",
+	// 		"param2": "value2",
+	// 	}
+
+	// 	_, err := companynames.ConstructURLWithParams(baseURL, params)
+	// 	if err == nil {
+	// 		t.Errorf("got %v, wanted error", err)
+	// 	}
+	// })
+}

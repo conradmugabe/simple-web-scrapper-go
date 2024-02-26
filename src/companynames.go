@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"io/fs"
+	"net/url"
 )
 
 type Company struct {
@@ -30,4 +31,17 @@ func CompanyNamesFromTextFile(fileSystem fs.FS, fileName string) ([]Company, err
 
 	companies := GetCompanies(file)
 	return companies, nil
+}
+
+func ConstructURLWithParams(baseURL string, params map[string]string) (string, error) {
+	parsedURL, err := url.Parse(baseURL)
+	if err != nil {
+		return "", err
+	}
+	query := parsedURL.Query()
+	for key, value := range params {
+		query.Set(key, value)
+	}
+	parsedURL.RawQuery = query.Encode()
+	return parsedURL.String(), nil
 }

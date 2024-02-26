@@ -10,6 +10,7 @@ import (
 )
 
 func TestReadTextFileErrorsWhenFileNotFound(t *testing.T) {
+	t.Parallel()
 	fs := fstest.MapFS{
 		"test.txt":  {Data: []byte("")},
 		"test2.txt": {Data: []byte("hello world 2")},
@@ -22,6 +23,7 @@ func TestReadTextFileErrorsWhenFileNotFound(t *testing.T) {
 }
 
 func TestReadTextFile(t *testing.T) {
+	t.Parallel()
 	fs := fstest.MapFS{
 		"test.txt":  {Data: []byte("")},
 		"test2.txt": {Data: []byte("hello world 2")},
@@ -41,6 +43,7 @@ func TestReadTextFile(t *testing.T) {
 }
 
 func TestReadTestFileContent(t *testing.T) {
+	t.Parallel()
 	fs := fstest.MapFS{
 		"test.txt":  {Data: []byte("hello\nworld")},
 		"test2.txt": {Data: []byte("hello world 2")},
@@ -57,7 +60,7 @@ func TestReadTestFileContent(t *testing.T) {
 	assertCompany(t, companies[1], companynames.Company{Name: "world"})
 }
 
-func assertCompany(t *testing.T, got companynames.Company, want companynames.Company) {
+func assertCompany(t *testing.T, got, want companynames.Company) {
 	t.Helper()
 
 	if !reflect.DeepEqual(got, want) {

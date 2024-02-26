@@ -2,6 +2,7 @@ package companynames
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"io/fs"
 )
@@ -10,10 +11,12 @@ type Company struct {
 	Name string
 }
 
-func CompanyNamesFromTextFile(fileSystem fs.FS, fileName string) ([]Company, error) {
+var ErrCannotReadFile = errors.New("failed to read file")
+
+func FromTextFile(fileSystem fs.FS, fileName string) ([]Company, error) {
 	file, err := fileSystem.Open(fileName)
 	if err != nil {
-		return nil, err
+		return nil, ErrCannotReadFile
 	}
 	defer file.Close()
 

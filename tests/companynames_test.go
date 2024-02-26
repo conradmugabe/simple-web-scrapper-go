@@ -1,6 +1,7 @@
 package companynames_test
 
 import (
+	"errors"
 	"reflect"
 	"testing"
 	"testing/fstest"
@@ -16,10 +17,8 @@ func TestReadTextFileErrorsWhenFileNotFound(t *testing.T) {
 	}
 	fileName := "test4.txt"
 
-	_, err := companynames.CompanyNamesFromTextFile(fs, fileName)
-	if err == nil {
-		t.Errorf("got %v, wanted error", err)
-	}
+	_, err := companynames.FromTextFile(fs, fileName)
+	assertError(t, err, companynames.ErrCannotReadFile)
 }
 
 func TestReadTextFile(t *testing.T) {
@@ -30,7 +29,7 @@ func TestReadTextFile(t *testing.T) {
 	}
 	fileName := "test.txt"
 
-	companies, err := companynames.CompanyNamesFromTextFile(fs, fileName)
+	companies, err := companynames.FromTextFile(fs, fileName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,20 +47,32 @@ func TestReadTestFileContent(t *testing.T) {
 		"test3.txt": {Data: []byte("hello world 3")},
 	}
 	fileName := "test.txt"
-	companies, _ := companynames.CompanyNamesFromTextFile(fs, fileName)
+	companies, _ := companynames.FromTextFile(fs, fileName)
 
 	if len(companies) != 2 {
 		t.Errorf("got %v, wanted %v", len(companies), 2)
 	}
 
-	assertPost(t, companies[0], companynames.Company{Name: "hello"})
-	assertPost(t, companies[1], companynames.Company{Name: "world"})
+	assertCompany(t, companies[0], companynames.Company{Name: "hello"})
+	assertCompany(t, companies[1], companynames.Company{Name: "world"})
 }
 
-func assertPost(t *testing.T, got companynames.Company, want companynames.Company) {
+func assertCompany(t *testing.T, got companynames.Company, want companynames.Company) {
 	t.Helper()
-	
+
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("got %+v, wanted %+v", got, want)
+	}
+}
+
+func assertError(t testing.TB, got, want error) {
+	t.Helper()
+
+	if got == nil {
+		t.Fatal("didn't get an error but wanted one")
+	}
+
+	if errors.Is(got, want) {
+		t.Errorf("got %q, want %q", got, want)
 	}
 }

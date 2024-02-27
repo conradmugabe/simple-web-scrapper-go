@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"net/http"
 	"net/url"
+	"regexp"
 )
 
 type Company struct {
@@ -59,6 +60,13 @@ func GetWebsiteContent(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	return string(content), nil
+}
+
+func ExtractURLs(data string) []string {
+	const URLRegex = `(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s` + "`" + `!()\[\]{};:'".,<>?«»“”‘’]))`
+
+	URLs := regexp.MustCompile(URLRegex).FindAllString(data, -1)
+	return URLs
 }

@@ -99,3 +99,31 @@ func TestGetWebsiteContent(t *testing.T) {
 		t.Errorf("got %q, wanted %q", got, want)
 	}
 }
+
+func TestExtractURLs(t *testing.T) {
+	cases := []struct {
+		name string
+		data string
+		want []string
+	}{{
+		name: "extracts URLs from string",
+		data: "Lorem http://example.com neque, www.openai.com sapien. http://example.org/",
+		want: []string{"http://example.com", "www.openai.com", "http://example.org/"},
+	},
+		{
+
+			name: "returns empty array if no URLs found",
+			data: "Lorem neque, sapien. Interdum.",
+			want: nil,
+		}}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := companynames.ExtractURLs(tt.data)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %q, wanted %q", got, tt.want)
+			}
+		})
+	}
+
+}

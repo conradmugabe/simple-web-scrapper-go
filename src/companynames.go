@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strings"
 )
 
 type Company struct {
@@ -67,6 +68,40 @@ func GetWebsiteContent(url string) (string, error) {
 func ExtractURLs(data string) []string {
 	const URLRegex = `(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s` + "`" + `!()\[\]{};:'".,<>?«»“”‘’]))`
 
-	URLs := regexp.MustCompile(URLRegex).FindAllString(data, -1)
+	URLs := ExtractDataFromText(data, URLRegex)
 	return URLs
+}
+
+const facebookURL = `https://www.facebook.com/`
+
+func GetAllFacebookLinks(URLs []string) string {
+	for _, URL := range URLs {
+		if strings.HasPrefix(URL, facebookURL) {
+			trimmedURL := strings.TrimPrefix(URL, facebookURL)
+
+			splitURL := strings.Split(trimmedURL, "/")
+			if len(splitURL) > 1 {
+				return facebookURL + splitURL[0]
+			}
+
+			return ""
+		}
+	}
+
+	return ""
+}
+
+func AddAboutLinkSuffix(url string) string {
+	return url + "/about"
+}
+
+func GetEmailsFromText(text string) []string {
+	const emailRegex = `[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`
+	emails := ExtractDataFromText(text, emailRegex)
+
+	return emails
+}
+
+func ExtractDataFromText(text string, regex string) []string {
+	return regexp.MustCompile(regex).FindAllString(text, -1)
 }

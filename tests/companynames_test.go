@@ -125,5 +125,79 @@ func TestExtractURLs(t *testing.T) {
 			}
 		})
 	}
+}
 
+func TestGetAllFacebookLinks(t *testing.T) {
+	cases := []struct {
+		name string
+		want string
+		urls []string
+	}{{
+		name: "returns the first facebook URL in the list",
+		want: "https://www.facebook.com/Test",
+		urls: []string{"https://www.facebook.com/Test/amp&1", "https://www.facebook.com/Test2/amp&2", "https://www.facebook.com/Test3/amp&3"},
+	}, {
+		name: "returns empty array if no URLs found",
+		want: "",
+		urls: nil,
+	}}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := companynames.GetAllFacebookLinks(tt.urls)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %q, wanted %q", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestAddAboutLinkSuffix(t *testing.T) {
+	cases := []struct {
+		name string
+		url  string
+		want string
+	}{{
+		name: "adds about link suffix",
+		url:  "https://www.facebook.com/Test",
+		want: "https://www.facebook.com/Test/about",
+	}, {
+		name: "adds about link suffix",
+		url:  "",
+		want: "/about",
+	}}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := companynames.AddAboutLinkSuffix(tt.url)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %q, wanted %q", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestGetEmailsFromText(t *testing.T) {
+	cases := []struct {
+		name string
+		data string
+		want []string
+	}{{
+		name: "extracts email from string",
+		data: "Lorem user@example.com neque, test@test.org sapien. @example.org/",
+		want: []string{"user@example.com", "test@test.org"},
+	}, {
+		name: "returns empty array if no email found",
+		data: "Lorem neque, sapien. Interdum.",
+		want: nil,
+	}}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := companynames.GetEmailsFromText(tt.data)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %q, wanted %q", got, tt.want)
+			}
+		})
+	}
 }

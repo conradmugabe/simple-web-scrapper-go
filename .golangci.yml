@@ -48,10 +48,6 @@ linters-settings:
     package-scope-only: false
   gocyclo:
     min-complexity: 15
-  gofumpt:
-    lang-version: "1.17"
-    module-path: voyager/point-management-service
-    extra-rules: true
   govet:
     check-shadowing: true
   ireturn:

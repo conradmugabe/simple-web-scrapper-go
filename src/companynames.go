@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"io/fs"
+	"net/http"
 	"net/url"
 )
 
@@ -44,4 +45,20 @@ func ConstructURLWithParams(baseURL string, params map[string]string) (string, e
 	}
 	parsedURL.RawQuery = query.Encode()
 	return parsedURL.String(), nil
+}
+
+func GetWebsiteContent(url string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	content, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	
+	return string(content), nil
 }

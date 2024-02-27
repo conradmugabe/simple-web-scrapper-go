@@ -1,6 +1,8 @@
 package companynames_test
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"reflect"
 	"testing"
 	"testing/fstest"
@@ -81,4 +83,19 @@ func TestConstructURLWithParams(t *testing.T) {
 			t.Errorf("got %q, wanted %q", got, want)
 		}
 	})
+}
+
+func TestGetWebsiteContent(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hello world"))
+	}))
+
+	defer server.Close()
+
+	want := "hello world"
+
+	got, _ := companynames.GetWebsiteContent(server.URL)
+	if got != want {
+		t.Errorf("got %q, wanted %q", got, want)
+	}
 }

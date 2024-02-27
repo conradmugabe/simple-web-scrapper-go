@@ -144,7 +144,7 @@ func TestGetAllFacebookLinks(t *testing.T) {
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			got := companynames.GetAllFacebookLinks(tt.urls)
+			got := companynames.GetAllFacebookLink(tt.urls)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %q, wanted %q", got, tt.want)
 			}
@@ -194,7 +194,35 @@ func TestGetEmailsFromText(t *testing.T) {
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			got := companynames.GetEmailsFromText(tt.data)
+			got := companynames.ExtractEmailsFromText(tt.data)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %q, wanted %q", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestGetFirstEntryInList(t *testing.T) {
+	cases := []struct {
+		name string
+		data []string
+		want string
+	}{
+		{
+			name: "returns first entry in list",
+			data: []string{"Test", "Test2", "Test3"},
+			want: "Test",
+		},
+		{
+			name: "returns empty string if list is empty",
+			data: []string{},
+			want: "",
+		},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			got := companynames.GetFirstEntryInList(tt.data)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %q, wanted %q", got, tt.want)
 			}

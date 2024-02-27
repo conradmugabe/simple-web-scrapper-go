@@ -22,9 +22,11 @@ func main() {
 		url, _ := companynames.ConstructURLWithParams("https://www.google.com/search", map[string]string{"q": company.Name})
 		body, _ := companynames.GetWebsiteContent(url)
 		urls := companynames.ExtractURLs(body)
-		fmt.Println(urls)
-		// for _, url := range urls {
-		// 	println(url)
-		// }
+		companyFacebookURL := companynames.GetAllFacebookLink(urls)
+		companyFacebookAboutPageURL := companynames.AddAboutLinkSuffix(companyFacebookURL)
+		aboutPageBody, _ := companynames.GetWebsiteContent(companyFacebookAboutPageURL)
+		emails := companynames.ExtractEmailsFromText(aboutPageBody)
+		company.Email = companynames.GetFirstEntryInList(emails)
+		fmt.Println(company)
 	}
 }

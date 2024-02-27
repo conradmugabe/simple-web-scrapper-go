@@ -11,7 +11,8 @@ import (
 )
 
 type Company struct {
-	Name string
+	Name  string
+	Email string
 }
 
 func CompanyNamesFromTextFile(fileSystem fs.FS, fileName string) ([]Company, error) {
@@ -74,7 +75,7 @@ func ExtractURLs(data string) []string {
 
 const facebookURL = `https://www.facebook.com/`
 
-func GetAllFacebookLinks(URLs []string) string {
+func GetAllFacebookLink(URLs []string) string {
 	for _, URL := range URLs {
 		if strings.HasPrefix(URL, facebookURL) {
 			trimmedURL := strings.TrimPrefix(URL, facebookURL)
@@ -95,13 +96,21 @@ func AddAboutLinkSuffix(url string) string {
 	return url + "/about"
 }
 
-func GetEmailsFromText(text string) []string {
-	const emailRegex = `[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`
-	emails := ExtractDataFromText(text, emailRegex)
+func ExtractEmailsFromText(text string) []string {
+	const EmailRegex = `[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}`
+	emails := ExtractDataFromText(text, EmailRegex)
 
 	return emails
 }
 
 func ExtractDataFromText(text string, regex string) []string {
 	return regexp.MustCompile(regex).FindAllString(text, -1)
+}
+
+func GetFirstEntryInList(data []string) string {
+	if len(data) > 0 {
+		return data[0]
+	}
+
+	return ""
 }

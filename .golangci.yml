@@ -17,11 +17,22 @@ linters:
     - exhaustivestruct
     - scopelint
     - interfacer
-    - ifshort
+    - godot
     - nosnakecase
+    - tagliatelle
+    - revive
+    - nosprintfhostport
+    - rowserrcheck
     - structcheck
-    - deadcode
+    - wastedassign
+    - ifshort
     - varcheck
+    - wrapcheck
+    - deadcode
+    - errname
+    - paralleltest
+    - tagalign
+    - depguard
 
 linters-settings:
   cyclop:

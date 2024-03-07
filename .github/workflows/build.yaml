@@ -24,4 +24,4 @@ jobs:
         run: make lint
 
       - name: Running Unit Testing 🧪
-        run: go test ./...
+        run: make test

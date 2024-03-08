@@ -94,17 +94,18 @@ func TestExtractURLs(t *testing.T) {
 		name string
 		data string
 		want []string
-	}{{
-		name: "extracts URLs from string",
-		data: "Lorem http://example.com neque, www.openai.com sapien. http://example.org/",
-		want: []string{"http://example.com", "www.openai.com", "http://example.org/"},
-	},
+	}{
 		{
-
+			name: "extracts URLs from string",
+			data: "Lorem http://example.com neque, www.openai.com sapien. http://example.org/",
+			want: []string{"http://example.com", "www.openai.com", "http://example.org/"},
+		},
+		{
 			name: "returns empty array if no URLs found",
 			data: "Lorem neque, sapien. Interdum.",
 			want: nil,
-		}}
+		},
+	}
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
@@ -122,9 +123,11 @@ func TestGetAllFacebookLinks(t *testing.T) {
 	}{{
 		name: "returns the first facebook URL in the list",
 		want: "https://www.facebook.com/Test",
-		urls: []string{"https://www.facebook.com/Test/amp&1",
+		urls: []string{
+			"https://www.facebook.com/Test/amp&1",
 			"https://www.facebook.com/Test2/amp&2",
-			"https://www.facebook.com/Test3/amp&3"},
+			"https://www.facebook.com/Test3/amp&3",
+		},
 	}, {
 		name: "returns empty array if no URLs found",
 		want: "",

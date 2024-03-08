@@ -48,7 +48,7 @@ func ConstructURLWithParams(baseURL string, params map[string]string) (string, e
 		return "", err
 	}
 	query := parsedURL.Query()
-	
+
 	for key, value := range params {
 		query.Set(key, value)
 	}

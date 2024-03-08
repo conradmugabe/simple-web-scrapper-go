@@ -14,7 +14,7 @@ const (
 
 func main() {
 	fs := os.DirFS(directory)
-	
+
 	companies, err := companynames.FromTextFile(fs, fileName)
 	if err != nil {
 		panic(err)

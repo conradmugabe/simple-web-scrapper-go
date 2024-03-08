@@ -1,0 +1,27 @@
+name: 'Build'
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches-ignore:
+      - main
+
+jobs:
+  linting-and-unit-testing:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository 🔔
+        uses: actions/checkout@v4
+
+      - name: Setup Go ☊
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+
+      - name: Checking Linting 🎩👔👞
+        run: make lint
+
+      - name: Running Unit Testing 🧪
+        run: make test

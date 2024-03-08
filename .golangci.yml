@@ -17,11 +17,22 @@ linters:
     - exhaustivestruct
     - scopelint
     - interfacer
-    - ifshort
+    - godot
     - nosnakecase
+    - tagliatelle
+    - revive
+    - nosprintfhostport
+    - rowserrcheck
     - structcheck
-    - deadcode
+    - wastedassign
+    - ifshort
     - varcheck
+    - wrapcheck
+    - deadcode
+    - errname
+    - paralleltest
+    - tagalign
+    - depguard
 
 linters-settings:
   cyclop:
@@ -37,10 +48,6 @@ linters-settings:
     package-scope-only: false
   gocyclo:
     min-complexity: 15
-  gofumpt:
-    lang-version: "1.17"
-    module-path: voyager/point-management-service
-    extra-rules: true
   govet:
     check-shadowing: true
   ireturn:

@@ -14,10 +14,12 @@ const (
 
 func main() {
 	fs := os.DirFS(directory)
-	companies, err := companynames.CompanyNamesFromTextFile(fs, fileName)
+	
+	companies, err := companynames.FromTextFile(fs, fileName)
 	if err != nil {
 		panic(err)
 	}
+
 	for _, company := range companies {
 		url, _ := companynames.ConstructURLWithParams("https://www.google.com/search", map[string]string{"q": company.Name})
 		body, _ := companynames.GetWebsiteContent(url)

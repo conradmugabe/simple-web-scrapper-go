@@ -2,6 +2,7 @@ package companynames
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"io/fs"
 	"net/http"
@@ -15,25 +16,29 @@ type Company struct {
 	Email string
 }
 
-func CompanyNamesFromTextFile(fileSystem fs.FS, fileName string) ([]Company, error) {
+var ErrCannotReadFile = errors.New("failed to read file")
+
+func FromTextFile(fileSystem fs.FS, fileName string) ([]Company, error) {
 	file, err := fileSystem.Open(fileName)
 	if err != nil {
-		return nil, err
+		return nil, ErrCannotReadFile
 	}
 	defer file.Close()
 
 	GetCompanies := func(file io.Reader) []Company {
 		var companies []Company
+
 		scanner := bufio.NewScanner(file)
 		for scanner.Scan() {
 			companies = append(companies, Company{
 				Name: scanner.Text(),
 			})
 		}
+
 		return companies
 	}
-
 	companies := GetCompanies(file)
+
 	return companies, nil
 }
 
@@ -43,10 +48,12 @@ func ConstructURLWithParams(baseURL string, params map[string]string) (string, e
 		return "", err
 	}
 	query := parsedURL.Query()
+	
 	for key, value := range params {
 		query.Set(key, value)
 	}
 	parsedURL.RawQuery = query.Encode()
+
 	return parsedURL.String(), nil
 }
 
@@ -67,16 +74,19 @@ func GetWebsiteContent(url string) (string, error) {
 }
 
 func ExtractURLs(data string) []string {
-	const URLRegex = `(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s` + "`" + `!()\[\]{};:'".,<>?«»“”‘’]))`
+	const URLRegex = `(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]
+		{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s
+		()<>]+|(\([^\s()<>]+\)))*\)|[^\s` + "`" + `!()\[\]{};:'".,<>?«»“”‘’]))`
 
 	URLs := ExtractDataFromText(data, URLRegex)
+
 	return URLs
 }
 
 const facebookURL = `https://www.facebook.com/`
 
-func GetAllFacebookLink(URLs []string) string {
-	for _, URL := range URLs {
+func GetAllFacebookLink(urls []string) string {
+	for _, URL := range urls {
 		if strings.HasPrefix(URL, facebookURL) {
 			trimmedURL := strings.TrimPrefix(URL, facebookURL)
 

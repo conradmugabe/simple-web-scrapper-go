@@ -23,6 +23,7 @@ func TestReadTextFileErrorsWhenFileNotFound(t *testing.T) {
 	companies, err := companynames.FromTextFile(fs, fileName)
 	assert.Nil(t, companies)
 	assert.Equal(t, err, companynames.ErrCannotReadFile)
+	assert.NotNil(t, err)
 }
 
 func TestReadTextFile(t *testing.T) {
@@ -212,4 +213,21 @@ func TestGetFirstEntryInList(t *testing.T) {
 			assert.Equal(t, got, tt.want, "got %q, wanted %q", got, tt.want)
 		})
 	}
+}
+
+func TestSaveToFileErrorsWhenFileNotFound(t *testing.T) {
+	t.Parallel()
+	fs := fstest.MapFS{}
+
+	fileName := "test.txt"
+
+	companies := []companynames.Company{
+		{Name: "Test", Email: "test@test.org"},
+		{Name: "Test2", Email: "test2@test.org"},
+		{Name: "Test3", Email: "test3@test.org"},
+	}
+
+	got, err := companynames.SaveToFile(fs, fileName, companies)
+	assert.NotNil(t, err)
+	assert.Equal(t, got, false, "got %q, wanted %q", got, true)
 }

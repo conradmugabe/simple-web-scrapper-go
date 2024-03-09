@@ -124,3 +124,21 @@ func GetFirstEntryInList(data []string) string {
 
 	return ""
 }
+
+func SaveToFile(fileSystem fs.FS, fileName string, companies []Company) (bool, error) {
+	file, err := fileSystem.Open(fileName)
+	if err != nil {
+		return false, err
+	}
+	defer file.Close()
+
+	// SaveCompanies := func(file io.Writer, companies []Company) {
+	// 	for _, company := range companies {
+	// 		file.Write([]byte(company.Name + " : " + company.Email))
+	// 	}
+	// }
+
+	// SaveCompanies(file, companies)
+
+	return true, nil
+}

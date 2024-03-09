@@ -2,3 +2,6 @@
 build/bin/*
 build/lint/*
 build/mockgen/*
+
+# Binaries
+simple-web-scrapper-go

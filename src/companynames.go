@@ -2,11 +2,14 @@ package companynames
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"io/fs"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -125,20 +128,22 @@ func GetFirstEntryInList(data []string) string {
 	return ""
 }
 
-func SaveToFile(fileSystem fs.FS, fileName string, companies []Company) (bool, error) {
-	file, err := fileSystem.Open(fileName)
-	if err != nil {
-		return false, err
+func SaveToFile(fileName string, companies []Company) error {
+	// using string builder
+	var output strings.Builder
+
+	// TODO: can also directly use a byte array since we are not doing any string manipulation
+	var outputBytes bytes.Buffer
+
+	for i := range companies {
+		output.WriteString(fmt.Sprintf("%s, %s\n", companies[i].Name, companies[i].Email))
+		outputBytes.WriteString(fmt.Sprintf("%s, %s\n", companies[i].Name, companies[i].Email))
 	}
-	defer file.Close()
 
-	// SaveCompanies := func(file io.Writer, companies []Company) {
-	// 	for _, company := range companies {
-	// 		file.Write([]byte(company.Name + " : " + company.Email))
-	// 	}
-	// }
+	err := os.WriteFile(fileName, []byte(output.String()), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write to file '%s': %w", fileName, err)
+	}
 
-	// SaveCompanies(file, companies)
-
-	return true, nil
+	return nil
 }

@@ -5,3 +5,6 @@ build/mockgen/*
 
 # Code Editors
 .vscode/
+
+# Output file
+companies_with_emails.txt

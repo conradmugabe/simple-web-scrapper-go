@@ -135,7 +135,7 @@ func SaveToFile(filePath string, companies []Company) error {
 		contentAsBytes.WriteString(fmt.Sprintf("%s = %s\n", companies[i].Name, companies[i].Email))
 	}
 
-	err := os.WriteFile(filePath, contentAsBytes.Bytes(), 0644)
+	err := os.WriteFile(filePath, contentAsBytes.Bytes(), 0o600)
 	if err != nil {
 		return fmt.Errorf("failed to write to file '%s': %w", filePath, err)
 	}

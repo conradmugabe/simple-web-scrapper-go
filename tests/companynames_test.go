@@ -13,6 +13,8 @@ import (
 	companynames "github.com/conradmugabe/simple-web-scrapper-go/src"
 )
 
+const fileName = "test.txt"
+
 func TestReadTextFileErrorsWhenFileNotFound(t *testing.T) {
 	t.Parallel()
 	fs := fstest.MapFS{
@@ -35,7 +37,6 @@ func TestReadTextFile(t *testing.T) {
 		"test2.txt": {Data: []byte("hello world 2")},
 		"test3.txt": {Data: []byte("hello world 3")},
 	}
-	fileName := "test.txt"
 
 	companies, err := companynames.FromTextFile(fs, fileName)
 	assert.Nil(t, err)
@@ -52,8 +53,6 @@ func TestReadTestFileContent(t *testing.T) {
 		"test2.txt": {Data: []byte("hello world 2")},
 		"test3.txt": {Data: []byte("hello world 3")},
 	}
-
-	fileName := "test.txt"
 
 	companies, err := companynames.FromTextFile(fs, fileName)
 	assert.Nil(t, err)
@@ -80,7 +79,8 @@ func TestConstructURLWithParams(t *testing.T) {
 
 func TestGetWebsiteContent(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hello world"))
+		_, err := w.Write([]byte("hello world"))
+		assert.Nil(t, err)
 	}))
 
 	defer server.Close()
@@ -227,8 +227,6 @@ func TestSaveToFile(t *testing.T) {
 
 	defer os.RemoveAll(tempDir)
 
-	fileName := "test.txt"
-
 	companies := []companynames.Company{
 		{Name: "Test", Email: "test@test.org"},
 		{Name: "Test2", Email: "test2@test.org"},
@@ -240,7 +238,7 @@ func TestSaveToFile(t *testing.T) {
 	assert.NoFileExists(t, filePath, "file %s should not exist", filePath)
 
 	err = companynames.SaveToFile(filePath, companies)
-	
+
 	assert.Nil(t, err)
 	assert.FileExists(t, filePath, "file %s should exist", filePath)
 }

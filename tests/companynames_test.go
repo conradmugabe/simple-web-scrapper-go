@@ -241,4 +241,8 @@ func TestSaveToFile(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.FileExists(t, filePath, "file %s should exist", filePath)
+
+	contents, err := os.ReadFile(filePath)
+	assert.Nil(t, err)
+	assert.Equal(t, string(contents), "Test = test@test.org\nTest2 = test2@test.org\nTest3 = test3@test.org\n")
 }

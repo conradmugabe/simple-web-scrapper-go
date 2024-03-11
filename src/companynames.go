@@ -21,6 +21,10 @@ type Company struct {
 
 var ErrCannotReadFile = errors.New("failed to read file")
 
+const URLRegex = `(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]
+	{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s
+	()<>]+|(\([^\s()<>]+\)))*\)|[^\s` + "`" + `!()\[\]{};:'".,<>?«»“”‘’]))`
+
 func FromTextFile(fileSystem fs.FS, fileName string) ([]Company, error) {
 	file, err := fileSystem.Open(fileName)
 	if err != nil {
@@ -77,10 +81,6 @@ func GetWebsiteContent(url string) (string, error) {
 }
 
 func ExtractURLs(data string) []string {
-	const URLRegex = `(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]
-		{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s
-		()<>]+|(\([^\s()<>]+\)))*\)|[^\s` + "`" + `!()\[\]{};:'".,<>?«»“”‘’]))`
-
 	URLs := ExtractDataFromText(data, URLRegex)
 
 	return URLs
@@ -128,21 +128,16 @@ func GetFirstEntryInList(data []string) string {
 	return ""
 }
 
-func SaveToFile(fileName string, companies []Company) error {
-	// using string builder
-	var output strings.Builder
-
-	// TODO: can also directly use a byte array since we are not doing any string manipulation
-	var outputBytes bytes.Buffer
+func SaveToFile(filePath string, companies []Company) error {
+	var contentAsBytes bytes.Buffer
 
 	for i := range companies {
-		output.WriteString(fmt.Sprintf("%s, %s\n", companies[i].Name, companies[i].Email))
-		outputBytes.WriteString(fmt.Sprintf("%s, %s\n", companies[i].Name, companies[i].Email))
+		contentAsBytes.WriteString(fmt.Sprintf("%s = %s\n", companies[i].Name, companies[i].Email))
 	}
 
-	err := os.WriteFile(fileName, []byte(output.String()), 0644)
+	err := os.WriteFile(filePath, contentAsBytes.Bytes(), 0644)
 	if err != nil {
-		return fmt.Errorf("failed to write to file '%s': %w", fileName, err)
+		return fmt.Errorf("failed to write to file '%s': %w", filePath, err)
 	}
 
 	return nil

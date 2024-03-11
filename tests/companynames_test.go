@@ -3,6 +3,8 @@ package companynames_test
 import (
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
 	"testing/fstest"
 
@@ -215,9 +217,15 @@ func TestGetFirstEntryInList(t *testing.T) {
 	}
 }
 
-func TestSaveToFileErrorsWhenFileNotFound(t *testing.T) {
+func TestSaveToFile(t *testing.T) {
 	t.Parallel()
-	fs := fstest.MapFS{}
+
+	tempDir, err := os.MkdirTemp(".", "test-dir-delete-me-*")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer os.RemoveAll(tempDir)
 
 	fileName := "test.txt"
 
@@ -227,7 +235,12 @@ func TestSaveToFileErrorsWhenFileNotFound(t *testing.T) {
 		{Name: "Test3", Email: "test3@test.org"},
 	}
 
-	got, err := companynames.SaveToFile(fs, fileName, companies)
-	assert.NotNil(t, err)
-	assert.Equal(t, got, false, "got %q, wanted %q", got, true)
+	filePath := filepath.Join(tempDir, fileName)
+
+	assert.NoFileExists(t, filePath, "file %s should not exist", filePath)
+
+	err = companynames.SaveToFile(filePath, companies)
+	
+	assert.Nil(t, err)
+	assert.FileExists(t, filePath, "file %s should exist", filePath)
 }
